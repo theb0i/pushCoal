@@ -13,22 +13,6 @@
         }
 
         /* Stil für die Benachrichtigung */
-        #notification {
-            font-size: 30px;
-            font-weight: bold;
-            color: red;
-            display: none; /* Anfangs unsichtbar */
-            padding: 20px;
-            border: 2px solid red;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .flashing {
-            animation: flashBackground 0.3s 3; /* Flashing animation */
-        }
-
-        /* Stil für das Ausrufezeichen und die Tabelle */
         .notification-item {
             font-size: 25px;
             color: red;
@@ -36,12 +20,16 @@
             border: 2px solid red;
             margin-bottom: 10px;
             cursor: pointer;
+            display: block;
+            transition: background-color 0.3s ease;
         }
 
+        /* Flashing Klasse */
         .flashing {
             animation: flashBackground 0.3s 3;
         }
 
+        /* Stil für das Ausrufezeichen und die Tabelle */
         #tableNumber {
             font-size: 50px;
             color: red;
@@ -107,7 +95,7 @@
         newNotification.classList.add('flashing');
 
         // Flashing wiederholen alle 5s, falls nicht angeklickt
-        const flashInterval = setInterval(() => {
+        let flashInterval = setInterval(() => {
             if (!newNotification.classList.contains('completed')) {
                 newNotification.classList.add('flashing');
                 setTimeout(() => newNotification.classList.remove('flashing'), 300); // Flash für 0.3s

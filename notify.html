@@ -29,7 +29,7 @@
     const messaging = getMessaging(app);
 
     // Firebase-Messaging Token abrufen (nur einmalig)
-    getToken(messaging, { vapidKey: 'YOUR_PUBLIC_VAPID_KEY' }).then((currentToken) => {
+    getToken(messaging, { vapidKey: 'BN_MNDUC1TvmMbpLM1SvaIPR4HtL8MDqPGdkoSZQTfemjBvJ7P_AU-Aup4O496Ti5eV79Ncu6kBBhOSMxIJSdvA' }).then((currentToken) => {
         if (currentToken) {
             console.log("Token erhalten: ", currentToken);
         } else {

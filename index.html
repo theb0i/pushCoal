@@ -6,12 +6,21 @@
     <title>Send Notification</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+
+    <script>            
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js';
+        import { getDatabase, ref, set } from 'https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js';
+    </script>
 </head>
 <body>
     <h1>Send Notification</h1>
     <button id="notifyButton">Send Notification</button>
 
     <script>
+
+
+
+
         // Firebase-Konfiguration einfügen
         const firebaseConfig = {
             apiKey: "AIzaSyC9fRuO8kTd5ttT5pu-dlsO157DY_H7NgE",

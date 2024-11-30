@@ -9,7 +9,7 @@
 <body>
 
 <!-- Audio für Benachrichtigungston -->
-<audio id="notification-sound" src="/1.wav" preload="auto"></audio>
+<audio id="notification-sound" src="https://theb0i.github.io/pushCoal/1.wav" preload="auto"></audio>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
@@ -34,20 +34,13 @@
     // Funktion, um die Zeitdifferenz in eine menschenlesbare Form umzuwandeln (nur Minuten und Stunden)
     function timeAgo(timestamp) {
         const now = new Date();
-
-        // Füge das heutige Datum zum Timestamp hinzu
         const today = new Date().toISOString().split('T')[0]; // Holen des heutigen Datums (YYYY-MM-DD)
         const timeParts = timestamp.split(':'); // Teile den timestamp in Stunden, Minuten und Sekunden
         const formattedTimestamp = today + 'T' + timestamp; // Kombiniere Datum und Uhrzeit
-
-        // Erstelle ein Date-Objekt aus dem Timestamp
         const time = new Date(formattedTimestamp);
-
         const diffInSeconds = Math.floor((now - time) / 1000); // Zeitdifferenz in Sekunden
-
         const minutes = Math.floor(diffInSeconds / 60) % 60;
         const hours = Math.floor(diffInSeconds / 3600);
-
         // Rückgabe der Zeitangabe basierend auf der Differenz (nur Minuten und Stunden)
         if (diffInSeconds < 60) {
             return `vor weniger als 1 Minute`;
@@ -64,27 +57,29 @@
     function showNotification(message, tableNumber, timestamp) {
         // Neue Benachrichtigung erstellen
         const notificationsList = document.getElementById('notifications-list');
-
-        // Neues Benachrichtigungs-Div erstellen
         const newNotification = document.createElement('div');
         newNotification.classList.add('notification-item');
 
-        // Umwandeln des Zeitstempels in eine lesbare Form (vor 1 Minute, vor 5 Stunden)
+        // Benachrichtigungston abspielen
+        const notificationSound = document.getElementById('notification-sound');
+        notificationSound.play();
+
+        // Umwandeln des Zeitstempels in eine lesbare Form
         const readableTimestamp = timeAgo(timestamp);
 
         // Inhalt der Benachrichtigung
         newNotification.innerHTML = `
-                <div class="notification">
-                    <div class="notification-header">
-                        <span class="table-number">${tableNumber}</span>
-                        <span class="message">${message}</span>                        
-                    </div>
-                    <div class="notification-footer">
+            <div class="notification">
+                <div class="notification-header">
+                    <span class="table-number">${tableNumber}</span>
+                    <span class="message">${message}</span>
+                </div>
+                <div class="notification-footer">
                     <span class="table-text">TISCH</span>
                     <div class="timestamp"><span id="timeAgo">${readableTimestamp}</span></div>
-                    </div>
                 </div>
-            `;
+            </div>
+        `;
 
         // Benachrichtigung zur Liste hinzufügen
         notificationsList.prepend(newNotification);
@@ -103,12 +98,9 @@
         // Startet den Timer für die Zeitdifferenz (Minute und Stunden)
         let startTime = new Date();
         let timeInterval = setInterval(() => {
-            // Berechne die Zeitdifferenz in Minuten und Stunden
             const diffInSeconds = Math.floor((new Date() - startTime) / 1000); // Zeitdifferenz in Sekunden
-
             const minutes = Math.floor(diffInSeconds / 60) % 60;
             const hours = Math.floor(diffInSeconds / 3600);
-
             let timeAgoText = '';
             if (diffInSeconds < 60) {
                 timeAgoText = `vor weniger als 1 Minute`;
@@ -119,7 +111,6 @@
             } else {
                 timeAgoText = 'vor mehr als 24 Stunden';
             }
-
             // Aktualisiere den Timestamp in der Benachrichtigung
             newNotification.querySelector('#timeAgo').innerText = timeAgoText;
         }, 60000); // Aktualisierung alle 1 Minute
@@ -130,10 +121,6 @@
             newNotification.style.backgroundColor = 'green'; // Verändert den Hintergrund zu grün
             clearInterval(flashInterval); // Stoppt den Flashing-Intervall, wenn angeklickt
         });
-
-        // Benachrichtigungston abspielen
-        const notificationSound = document.getElementById('notification-sound');
-        notificationSound.play();
     }
 
     // Firebase-Datenbank überwachen
@@ -144,7 +131,6 @@
             const message = data.message || 'Keine Nachricht';
             const tableNumber = data.tableNumber || 'Unbekannt';
             const timestamp = data.timestamp || 'Unbekannt';
-
             // Zeige die Benachrichtigung und starte die Animation
             showNotification(message, tableNumber, timestamp);
         }

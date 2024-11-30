@@ -3,20 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Push Notification Trigger</title>
-    <script src="/socket.io/socket.io.js"></script>
+    <title>Send Notification</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
 </head>
 <body>
-    <h1>Push Notification Trigger</h1>
+    <h1>Send Notification</h1>
     <button id="notifyButton">Send Notification</button>
 
     <script>
-        const socket = io();
+        // Firebase-Konfiguration einfügen
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9fRuO8kTd5ttT5pu-dlsO157DY_H7NgE",
+            authDomain: "pushcoal-745bc.firebaseapp.com",
+            databaseURL: "https://pushcoal-745bc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "pushcoal-745bc",
+            storageBucket: "pushcoal-745bc.firebasestorage.app",
+            messagingSenderId: "592638766918",
+            appId: "1:592638766918:web:10a98c5f87a563c9823f47",
+            measurementId: "G-W16QRE2BFL"
+        };
 
+        // Firebase initialisieren
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Button-Listener
         document.getElementById('notifyButton').addEventListener('click', () => {
-            // Nachricht an den Server senden
-            socket.emit('send-notification');
-            alert('Notification gesendet!');
+            const ref = firebase.database().ref('notifications');
+            ref.set({ message: 'Neue Kohle', timestamp: Date.now() });
+            alert('Notification sent!');
         });
     </script>
 </body>

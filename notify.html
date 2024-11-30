@@ -36,6 +36,11 @@
             padding: 10px;
             border: 2px solid red;
             margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .flashed {
+            animation: flashBackground 0.3s 3;
         }
 
         #tableNumber {
@@ -51,6 +56,10 @@
         /* Um neue Benachrichtigungen unter der alten hinzuzufügen */
         #notifications-list {
             margin-top: 20px;
+        }
+
+        .completed {
+            background-color: green !important;
         }
     </style>
 </head>
@@ -97,6 +106,23 @@
 
         // Hintergrundanimation starten
         newNotification.classList.add('flashing');
+
+        // Alle 30 Sekunden den Flash-Effekt wiederholen, wenn die Benachrichtigung noch nicht angeklickt wurde
+        const flashInterval = setInterval(() => {
+            if (!newNotification.classList.contains('completed')) {
+                newNotification.classList.add('flashed');
+                setTimeout(() => newNotification.classList.remove('flashed'), 300); // Flash für 0.3s
+            } else {
+                clearInterval(flashInterval); // Stoppt das Flashen, wenn angeklickt
+            }
+        }, 30000); // Alle 30 Sekunden
+
+        // Klick-Event für die Benachrichtigung
+        newNotification.addEventListener('click', () => {
+            newNotification.classList.add('completed'); // Verändert den Hintergrund zu grün
+            newNotification.style.backgroundColor = 'green';
+            clearInterval(flashInterval); // Stoppt das Flashen, wenn angeklickt
+        });
     }
 
     // Firebase-Datenbank überwachen

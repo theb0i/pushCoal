@@ -8,9 +8,8 @@
         /* CSS-Animation für den Hintergrundwechsel */
         @keyframes flashBackground {
             0% { background-color: white; }
-            33% { background-color: black; }
-            66% { background-color: white; }
-            100% { background-color: black; }
+            50% { background-color: black; }
+            100% { background-color: white; }
         }
 
         /* Stil für die Benachrichtigung */
@@ -39,7 +38,7 @@
             cursor: pointer;
         }
 
-        .flashed {
+        .flashing {
             animation: flashBackground 0.3s 3;
         }
 
@@ -107,15 +106,13 @@
         // Hintergrundanimation starten
         newNotification.classList.add('flashing');
 
-        // Flashing wiederholen alle 30s, falls nicht angeklickt
-        let flashInterval = setInterval(() => {
+        // Flashing wiederholen alle 5s, falls nicht angeklickt
+        const flashInterval = setInterval(() => {
             if (!newNotification.classList.contains('completed')) {
-                newNotification.classList.add('flashed');
-                setTimeout(() => newNotification.classList.remove('flashed'), 300); // Flash für 0.3s
-            } else {
-                clearInterval(flashInterval); // Stoppt das Flashen, wenn angeklickt
+                newNotification.classList.add('flashing');
+                setTimeout(() => newNotification.classList.remove('flashing'), 300); // Flash für 0.3s
             }
-        }, 2000); // Alle 30 Sekunden
+        }, 5000); // Alle 5 Sekunden
 
         // Klick-Event für die Benachrichtigung
         newNotification.addEventListener('click', () => {

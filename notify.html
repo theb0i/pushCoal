@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receive Notification</title>
     <link rel="stylesheet" href="style.css">
-</head>
+ </head>
 <body>
 
 <script type="module">
@@ -71,10 +71,17 @@
 
         // Inhalt der Benachrichtigung
         newNotification.innerHTML = `
-            <div id="tableNumber">⚠️ Tisch: ${tableNumber}</div>
-            <div id="message"> ${message}</div>
-            <div id="timestamp">Zeit: <span id="timeAgo">${readableTimestamp}</span></div>
-        `;
+                <div class="notification">
+                    <div class="notification-header">
+                        <span class="table-number">${tableNumber}</span>
+                        <span class="message">${message}</span>                        
+                    </div>
+                    <div class="notification-footer">
+                    <span class="table-text">TISCH</span>
+                    <div class="timestamp"><span id="timeAgo">${readableTimestamp}</span></div>
+                    </div>
+                </div>
+            `;
 
         // Benachrichtigung zur Liste hinzufügen
         notificationsList.prepend(newNotification);
@@ -119,8 +126,6 @@
             newNotification.classList.add('completed'); // Markiert den Task als erledigt
             newNotification.style.backgroundColor = 'green'; // Verändert den Hintergrund zu grün
             clearInterval(flashInterval); // Stoppt den Flashing-Intervall, wenn angeklickt
-
-            // Der Timer für die Zeitdifferenz läuft weiter und zeigt weiterhin die aktualisierte Zeit an
         });
     }
 

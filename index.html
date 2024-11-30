@@ -33,7 +33,8 @@
         const notificationRef = ref(db, 'notifications');  // Referenz auf 'notifications' in der Datenbank
         set(notificationRef, {
             message: 'Neue Kohle',  // Nachricht, die gesendet werden soll
-            timestamp: Date.now()    // Der aktuelle Zeitstempel
+            timestamp: new Date().toLocaleTimeString(),  // nur die Uhrzeit
+            tableNumber: '1'
         }).then(() => {
             alert('Benachrichtigung gesendet!');
         }).catch((error) => {

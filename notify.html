@@ -23,30 +23,46 @@
             measurementId: "G-W16QRE2BFL"
         };
 
-        // Firebase initialisieren
-        const app = firebase.initializeApp(firebaseConfig);
+     // Firebase initialisieren
+     const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Auf Änderungen in der Datenbank lauschen
+        // Funktion zur Anfrage der Berechtigung
+        function requestNotificationPermission() {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Benachrichtigungen sind erlaubt!');
+                    } else {
+                        console.log('Benachrichtigungen wurden abgelehnt.');
+                    }
+                }).catch(err => {
+                    console.log('Fehler bei der Anfrage der Benachrichtigungsberechtigung:', err);
+                });
+            } else {
+                console.log('Dieser Browser unterstützt keine Benachrichtigungen.');
+            }
+        }
+
+        // Auf Firebase-Datenbankänderungen lauschen
         const ref = firebase.database().ref('notifications');
         ref.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // Zeige die Benachrichtigung an
-                if ('Notification' in window) {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            new Notification(data.message, {
-                                body: 'Du hast eine neue Nachricht!',
-                                icon: 'https://via.placeholder.com/128'
-                            });
-                        }
+                // Wenn Benachrichtigungen erlaubt sind, zeige sie an
+                if (Notification.permission === 'granted') {
+                    new Notification(data.message, {
+                        body: 'Du hast eine neue Nachricht!',
+                        icon: 'https://via.placeholder.com/128'
                     });
                 } else {
                     alert('Neue Nachricht: ' + data.message);
                 }
             }
         });
+
+        // Bei Seitenaufruf Berechtigung anfordern
+        requestNotificationPermission();
     </script>
 </body>
 </html>

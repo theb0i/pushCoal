@@ -4,13 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receive Notification</title>
+    <style>
+        /* CSS-Animation für den Hintergrundwechsel */
+        @keyframes flashBackground {
+            0% { background-color: white; }
+            33% { background-color: black; }
+            66% { background-color: white; }
+            100% { background-color: black; }
+        }
+
+        /* Stil für die Benachrichtigung */
+        #notification {
+            font-size: 30px;
+            font-weight: bold;
+            color: red;
+            display: none; /* Anfangs unsichtbar */
+            padding: 20px;
+            border: 2px solid red;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .flashing {
+            animation: flashBackground 0.3s 3;
+        }
+
+        /* Stil für das Ausrufezeichen und die Tabelle */
+        #tableNumber {
+            font-size: 50px;
+            color: red;
+        }
+
+        #timestamp {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
-    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-messaging.js";
 
     // Firebase-Konfiguration
     const firebaseConfig = {
@@ -28,57 +63,42 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Firebase Cloud Messaging initialisieren
-    const messaging = getMessaging(app);
+    // Funktion, die Benachrichtigung anzeigt
+    function showNotification(message, tableNumber, timestamp) {
+        // Zeige das Benachrichtigungsdiv
+        const notificationDiv = document.getElementById('notification');
+        const tableNumberDiv = document.getElementById('tableNumber');
+        const timestampDiv = document.getElementById('timestamp');
 
-    // Funktion zum Anfordern eines Tokens für Push-Benachrichtigungen
-    async function requestNotificationPermission() {
-        try {
-            const token = await getToken(messaging, {
-                vapidKey: 'BN_MNDUC1TvmMbpLM1SvaIPR4HtL8MDqPGdkoSZQTfemjBvJ7P_AU-Aup4O496Ti5eV79Ncu6kBBhOSMxIJSdvA'  // Dein VAPID-Schlüssel hier einfügen
-            });
-            console.log('Token erhalten:', token);
-        } catch (error) {
-            console.error('Fehler beim Abrufen des Tokens:', error);
-        }
+        tableNumberDiv.textContent = `Tabelle: ${tableNumber}`;
+        timestampDiv.textContent = `Zeit: ${timestamp}`;
+        
+        notificationDiv.style.display = 'block';
+        notificationDiv.classList.add('flashing'); // CSS-Animation starten
     }
 
-    // Auf Firebase-Datenbank überwachen
+    // Firebase-Datenbank überwachen
     const notificationRef = ref(db, 'notifications');
     onValue(notificationRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
-            // Wenn eine Nachricht empfangen wurde, zeige eine Push-Benachrichtigung
             const message = data.message || 'Keine Nachricht';
+            const tableNumber = data.tableNumber || 'Unbekannt';
             const timestamp = data.timestamp || 'Unbekannt';
 
-            // Browser-Push-Benachrichtigung anzeigen
-            if (Notification.permission === "granted") {
-                new Notification("Neue Benachrichtigung", {
-                    body: `Nachricht: ${message}\nZeit: ${timestamp}`,
-                    icon: 'https://example.com/icon.png'  // Optional: füge ein Icon hinzu
-                });
-            }
+            // Zeige die Benachrichtigung und starte die Animation
+            showNotification(message, tableNumber, timestamp);
         }
     });
-
-    // Benachrichtigungsberechtigung anfordern
-    if (Notification.permission !== "granted") {
-        Notification.requestPermission().then((permission) => {
-            if (permission === "granted") {
-                requestNotificationPermission();
-            } else {
-                console.log('Benachrichtigungen abgelehnt');
-            }
-        });
-    }
 </script>
 
-<h1>Notification Empfänger</h1>
-<p>Warten auf Benachrichtigungen...</p>
+<h1>Empfänger für Benachrichtigungen</h1>
+
+<!-- Benachrichtigung anzeigen -->
+<div id="notification">
+    <div id="tableNumber">⚠️</div>
+    <div id="timestamp"></div>
+</div>
 
 </body>
 </html>
-
-
-   

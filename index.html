@@ -28,11 +28,17 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Button-Listener
-        document.getElementById('notifyButton').addEventListener('click', () => {
-            const ref = firebase.database().ref('notifications');
-            ref.set({ message: 'Neue Kohle', timestamp: Date.now() });
-            alert('Notification sent!');
+        // Button zum Senden der Benachrichtigung
+        document.getElementById('sendNotification').addEventListener('click', () => {
+            const ref = db.ref('notifications');  // Die "notifications" Referenz
+            ref.set({
+                message: 'Neue Kohle',   // Nachricht, die gesendet werden soll
+                timestamp: Date.now()     // Der aktuelle Zeitstempel
+            }).then(() => {
+                alert('Benachrichtigung gesendet!');
+            }).catch((error) => {
+                console.error('Fehler beim Senden der Benachrichtigung:', error);
+            });
         });
     </script>
 </body>

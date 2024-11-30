@@ -8,11 +8,11 @@
 <body>
 
 <script type="module">
-    // Firebase initialisieren
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
-    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-messaging.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-messaging.js";
 
+    // Firebase-Konfiguration
     const firebaseConfig = {
         apiKey: "AIzaSyC9fRuO8kTd5ttT5pu-dlsO157DY_H7NgE",
         authDomain: "pushcoal-745bc.firebaseapp.com",
@@ -24,55 +24,61 @@
         measurementId: "G-W16QRE2BFL"
     };
 
+    // Firebase initialisieren
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+
+    // Firebase Cloud Messaging initialisieren
     const messaging = getMessaging(app);
 
-    // Firebase-Messaging Token abrufen (nur einmalig)
-    getToken(messaging, { vapidKey: 'BN_MNDUC1TvmMbpLM1SvaIPR4HtL8MDqPGdkoSZQTfemjBvJ7P_AU-Aup4O496Ti5eV79Ncu6kBBhOSMxIJSdvA' }).then((currentToken) => {
-        if (currentToken) {
-            console.log("Token erhalten: ", currentToken);
-        } else {
-            console.log("Kein Token erhalten.");
-        }
-    }).catch((error) => {
-        console.error('Token Error:', error);
-    });
-
-    // Push-Benachrichtigung, wenn eine neue Nachricht in der Datenbank erscheint
-    onValue(ref(db, 'notifications'), (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            showPushNotification(data.message);
-        }
-    });
-
-    // Zeigt die Push-Benachrichtigung
-    function showPushNotification(message) {
-        if (Notification.permission === 'granted') {
-            new Notification('Neue Nachricht: ' + message);
+    // Funktion zum Anfordern eines Tokens für Push-Benachrichtigungen
+    async function requestNotificationPermission() {
+        try {
+            const token = await getToken(messaging, {
+                vapidKey: 'BN_MNDUC1TvmMbpLM1SvaIPR4HtL8MDqPGdkoSZQTfemjBvJ7P_AU-Aup4O496Ti5eV79Ncu6kBBhOSMxIJSdvA'  // Dein VAPID-Schlüssel hier einfügen
+            });
+            console.log('Token erhalten:', token);
+        } catch (error) {
+            console.error('Fehler beim Abrufen des Tokens:', error);
         }
     }
 
-    // Berechtigung für Push-Benachrichtigungen anfragen
-    if (Notification.permission !== 'granted') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                console.log('Push-Benachrichtigungen erlaubt.');
+    // Auf Firebase-Datenbank überwachen
+    const notificationRef = ref(db, 'notifications');
+    onValue(notificationRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            // Wenn eine Nachricht empfangen wurde, zeige eine Push-Benachrichtigung
+            const message = data.message || 'Keine Nachricht';
+            const timestamp = data.timestamp || 'Unbekannt';
+
+            // Browser-Push-Benachrichtigung anzeigen
+            if (Notification.permission === "granted") {
+                new Notification("Neue Benachrichtigung", {
+                    body: `Nachricht: ${message}\nZeit: ${timestamp}`,
+                    icon: 'https://example.com/icon.png'  // Optional: füge ein Icon hinzu
+                });
+            }
+        }
+    });
+
+    // Benachrichtigungsberechtigung anfordern
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                requestNotificationPermission();
+            } else {
+                console.log('Benachrichtigungen abgelehnt');
             }
         });
     }
-
-    // Beim Empfang von Nachrichten in der App (z.B. im Hintergrund)
-    onMessage(messaging, (payload) => {
-        console.log('Nachricht empfangen:', payload);
-        new Notification(payload.notification.title, {
-            body: payload.notification.body
-        });
-    });
 </script>
 
-<h1>Waiting for Notifications...</h1>
+<h1>Notification Empfänger</h1>
+<p>Warten auf Benachrichtigungen...</p>
 
 </body>
 </html>
+
+
+   

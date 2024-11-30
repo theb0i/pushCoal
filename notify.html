@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receive Notification</title>
     <link rel="stylesheet" href="style.css">
- </head>
+</head>
 <body>
+
+<!-- Audio für Benachrichtigungston -->
+<audio id="notification-sound" src="/1.wav" preload="auto"></audio>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
@@ -127,6 +130,10 @@
             newNotification.style.backgroundColor = 'green'; // Verändert den Hintergrund zu grün
             clearInterval(flashInterval); // Stoppt den Flashing-Intervall, wenn angeklickt
         });
+
+        // Benachrichtigungston abspielen
+        const notificationSound = document.getElementById('notification-sound');
+        notificationSound.play();
     }
 
     // Firebase-Datenbank überwachen

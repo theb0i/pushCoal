@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Notification</title>
+    <title>Ich brauche Kohle, Mann!</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -36,15 +37,66 @@
             timestamp: new Date().toLocaleTimeString(),  // nur die Uhrzeit
             tableNumber: '1'
         }).then(() => {
-            alert('Benachrichtigung gesendet!');
+            // Text anzeigen, wenn Benachrichtigung erfolgreich gesendet wurde
+            document.getElementById('confirmationMessageCoal').innerText = 'Kohle erfolgreich bestellt!';
         }).catch((error) => {
             console.error('Fehler beim Senden der Benachrichtigung:', error);
         });
     });
+
+    document.getElementById('notifyButton2').addEventListener('click', () => {
+        const notificationRef = ref(db, 'notifications');  // Referenz auf 'notifications' in der Datenbank
+        set(notificationRef, {
+            message: 'Service',  // Nachricht, die gesendet werden soll
+            timestamp: new Date().toLocaleTimeString(),  // nur die Uhrzeit
+            tableNumber: '1'
+        }).then(() => {
+            // Text anzeigen, wenn Benachrichtigung erfolgreich gesendet wurde
+            document.getElementById('confirmationMessageCoal').innerText = 'Service erfolgreich bestellt!';
+        }).catch((error) => {
+            console.error('Fehler beim Senden der Benachrichtigung:', error);
+        });
+    });
+
 </script>
 
-<h1>Send Notification</h1>
-<button id="notifyButton">Send Notification</button>
+<h1>Was brauchst du?</h1>
+<button id="notifyButton">Kohle</button>
+<button id="notifyButton2">Service</button>
+<!-- Bestätigungstext wird hier angezeigt -->
+<p id="confirmationMessageCoal"></p>
+
+
+
+
+    <!-- Hier ist der Shisha Rauch -->
+    <div class="smoke"></div>
+    <div class="smoke"></div> 
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>    
+    <div class="smoke"></div> 
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div> 
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <!-- Dein Footer-Inhalt -->
+
 
 </body>
 </html>

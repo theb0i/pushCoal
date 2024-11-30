@@ -4,51 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receive Notification</title>
-    <style>
-        /* CSS-Animation für den Hintergrundwechsel */
-        @keyframes flashBackground {
-            0% { background-color: white; }
-            50% { background-color: black; }
-            100% { background-color: white; }
-        }
-
-        /* Stil für die Benachrichtigung */
-        .notification-item {
-            font-size: 25px;
-            color: red;
-            padding: 10px;
-            border: 2px solid red;
-            margin-bottom: 10px;
-            cursor: pointer;
-            display: block;
-            transition: background-color 0.3s ease;
-        }
-
-        /* Flashing Klasse */
-        .flashing {
-            animation: flashBackground 0.3s 3;
-        }
-
-        /* Stil für das Ausrufezeichen und die Tabelle */
-        #tableNumber {
-            font-size: 50px;
-            color: red;
-        }
-
-        #timestamp {
-            font-size: 20px;
-            margin-top: 10px;
-        }
-
-        /* Um neue Benachrichtigungen unter der alten hinzuzufügen */
-        #notifications-list {
-            margin-top: 20px;
-        }
-
-        .completed {
-            background-color: green !important;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -72,6 +28,35 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // Funktion, um die Zeitdifferenz in eine menschenlesbare Form umzuwandeln (nur Minuten und Stunden)
+    function timeAgo(timestamp) {
+        const now = new Date();
+
+        // Füge das heutige Datum zum Timestamp hinzu
+        const today = new Date().toISOString().split('T')[0]; // Holen des heutigen Datums (YYYY-MM-DD)
+        const timeParts = timestamp.split(':'); // Teile den timestamp in Stunden, Minuten und Sekunden
+        const formattedTimestamp = today + 'T' + timestamp; // Kombiniere Datum und Uhrzeit
+
+        // Erstelle ein Date-Objekt aus dem Timestamp
+        const time = new Date(formattedTimestamp);
+
+        const diffInSeconds = Math.floor((now - time) / 1000); // Zeitdifferenz in Sekunden
+
+        const minutes = Math.floor(diffInSeconds / 60) % 60;
+        const hours = Math.floor(diffInSeconds / 3600);
+
+        // Rückgabe der Zeitangabe basierend auf der Differenz (nur Minuten und Stunden)
+        if (diffInSeconds < 60) {
+            return `vor weniger als 1 Minute`;
+        } else if (minutes < 60) {
+            return `vor ${minutes} Minuten`;
+        } else if (hours < 24) {
+            return `vor ${hours} Stunden`;
+        } else {
+            return 'vor mehr als 24 Stunden';
+        }
+    }
+
     // Funktion, die Benachrichtigung anzeigt
     function showNotification(message, tableNumber, timestamp) {
         // Neue Benachrichtigung erstellen
@@ -81,17 +66,20 @@
         const newNotification = document.createElement('div');
         newNotification.classList.add('notification-item');
 
+        // Umwandeln des Zeitstempels in eine lesbare Form (vor 1 Minute, vor 5 Stunden)
+        const readableTimestamp = timeAgo(timestamp);
+
         // Inhalt der Benachrichtigung
         newNotification.innerHTML = `
             <div id="tableNumber">⚠️ Tisch: ${tableNumber}</div>
-            <div id="message">Neue Kohle: ${message}</div>
-            <div id="timestamp">Zeit: ${timestamp}</div>
+            <div id="message"> ${message}</div>
+            <div id="timestamp">Zeit: <span id="timeAgo">${readableTimestamp}</span></div>
         `;
 
         // Benachrichtigung zur Liste hinzufügen
         notificationsList.prepend(newNotification);
 
-        // Hintergrundanimation starten
+        // Hintergrundanimation starten (Flashing)
         newNotification.classList.add('flashing');
 
         // Flashing wiederholen alle 5s, falls nicht angeklickt
@@ -102,11 +90,37 @@
             }
         }, 5000); // Alle 5 Sekunden
 
+        // Startet den Timer für die Zeitdifferenz (Minute und Stunden)
+        let startTime = new Date();
+        let timeInterval = setInterval(() => {
+            // Berechne die Zeitdifferenz in Minuten und Stunden
+            const diffInSeconds = Math.floor((new Date() - startTime) / 1000); // Zeitdifferenz in Sekunden
+
+            const minutes = Math.floor(diffInSeconds / 60) % 60;
+            const hours = Math.floor(diffInSeconds / 3600);
+
+            let timeAgoText = '';
+            if (diffInSeconds < 60) {
+                timeAgoText = `vor weniger als 1 Minute`;
+            } else if (minutes < 60) {
+                timeAgoText = `vor ${minutes} Minuten`;
+            } else if (hours < 24) {
+                timeAgoText = `vor ${hours} Stunden`;
+            } else {
+                timeAgoText = 'vor mehr als 24 Stunden';
+            }
+
+            // Aktualisiere den Timestamp in der Benachrichtigung
+            newNotification.querySelector('#timeAgo').innerText = timeAgoText;
+        }, 60000); // Aktualisierung alle 1 Minute
+
         // Klick-Event für die Benachrichtigung
         newNotification.addEventListener('click', () => {
-            newNotification.classList.add('completed'); // Verändert den Hintergrund zu grün
-            newNotification.style.backgroundColor = 'green';
-            clearInterval(flashInterval); // Stoppt das Flashen, wenn angeklickt
+            newNotification.classList.add('completed'); // Markiert den Task als erledigt
+            newNotification.style.backgroundColor = 'green'; // Verändert den Hintergrund zu grün
+            clearInterval(flashInterval); // Stoppt den Flashing-Intervall, wenn angeklickt
+
+            // Der Timer für die Zeitdifferenz läuft weiter und zeigt weiterhin die aktualisierte Zeit an
         });
     }
 

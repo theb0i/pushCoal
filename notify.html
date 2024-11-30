@@ -3,29 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification Receiver</title>
-    <script src="/socket.io/socket.io.js"></script>
+    <title>Receive Notification</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
 </head>
 <body>
     <h1>Warte auf Benachrichtigungen...</h1>
 
     <script>
-        const socket = io();
+        // Firebase-Konfiguration einfügen
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9fRuO8kTd5ttT5pu-dlsO157DY_H7NgE",
+            authDomain: "pushcoal-745bc.firebaseapp.com",
+            databaseURL: "https://pushcoal-745bc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "pushcoal-745bc",
+            storageBucket: "pushcoal-745bc.firebasestorage.app",
+            messagingSenderId: "592638766918",
+            appId: "1:592638766918:web:10a98c5f87a563c9823f47",
+            measurementId: "G-W16QRE2BFL"
+        };
 
-        // Auf Nachrichten vom Server lauschen
-        socket.on('receive-notification', (message) => {
-            // Prüfen, ob Notifications unterstützt werden
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        new Notification(message, {
-                            body: 'Eine neue Benachrichtigung ist eingetroffen!',
-                            icon: 'https://via.placeholder.com/128', // Beispiel-Icon
-                        });
-                    } else {
-                        alert('Benachrichtigung erhalten: ' + message);
-                    }
-                });
+        // Firebase initialisieren
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Auf Änderungen in der Datenbank lauschen
+        const ref = firebase.database().ref('notifications');
+        ref.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Zeige die Benachrichtigung an
+                if ('Notification' in window) {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification(data.message, {
+                                body: 'Du hast eine neue Nachricht!',
+                                icon: 'https://via.placeholder.com/128'
+                            });
+                        }
+                    });
+                } else {
+                    alert('Neue Nachricht: ' + data.message);
+                }
             }
         });
     </script>

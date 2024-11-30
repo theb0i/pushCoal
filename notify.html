@@ -30,6 +30,14 @@
         }
 
         /* Stil für das Ausrufezeichen und die Tabelle */
+        .notification-item {
+            font-size: 25px;
+            color: red;
+            padding: 10px;
+            border: 2px solid red;
+            margin-bottom: 10px;
+        }
+
         #tableNumber {
             font-size: 50px;
             color: red;
@@ -38,6 +46,11 @@
         #timestamp {
             font-size: 20px;
             margin-top: 10px;
+        }
+
+        /* Um neue Benachrichtigungen unter der alten hinzuzufügen */
+        #notifications-list {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -65,16 +78,25 @@
 
     // Funktion, die Benachrichtigung anzeigt
     function showNotification(message, tableNumber, timestamp) {
-        // Zeige das Benachrichtigungsdiv
-        const notificationDiv = document.getElementById('notification');
-        const tableNumberDiv = document.getElementById('tableNumber');
-        const timestampDiv = document.getElementById('timestamp');
+        // Neue Benachrichtigung erstellen
+        const notificationsList = document.getElementById('notifications-list');
 
-        tableNumberDiv.textContent = `Tabelle: ${tableNumber}`;
-        timestampDiv.textContent = `Zeit: ${timestamp}`;
-        
-        notificationDiv.style.display = 'block';
-        notificationDiv.classList.add('flashing'); // CSS-Animation starten
+        // Neues Benachrichtigungs-Div erstellen
+        const newNotification = document.createElement('div');
+        newNotification.classList.add('notification-item');
+
+        // Inhalt der Benachrichtigung
+        newNotification.innerHTML = `
+            <div id="tableNumber">⚠️ Tisch: ${tableNumber}</div>
+            <div id="message">Neue Kohle: ${message}</div>
+            <div id="timestamp">Zeit: ${timestamp}</div>
+        `;
+
+        // Benachrichtigung zur Liste hinzufügen
+        notificationsList.prepend(newNotification);
+
+        // Hintergrundanimation starten
+        newNotification.classList.add('flashing');
     }
 
     // Firebase-Datenbank überwachen
@@ -94,11 +116,8 @@
 
 <h1>Empfänger für Benachrichtigungen</h1>
 
-<!-- Benachrichtigung anzeigen -->
-<div id="notification">
-    <div id="tableNumber">⚠️</div>
-    <div id="timestamp"></div>
-</div>
+<!-- Liste der Benachrichtigungen -->
+<div id="notifications-list"></div>
 
 </body>
 </html>

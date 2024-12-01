@@ -192,7 +192,7 @@ button:hover {
     border-radius: 50%;
     animation: smoke-animation 6s infinite;
     opacity: 1;
-    transition: opacity 1s ease-out, transform 1s ease-out;
+    transition: opacity 1s ease-out, transform 5s ease-out;
   }
   
       .smoke:nth-child(1) {
@@ -232,7 +232,7 @@ button:hover {
   
   @keyframes smoke-animation {
     0% {
-      transform: scale(0.8) translateX(0) translateY(0); /* Startgröße und Position */
+      transform: scale(1.2) translateX(0) translateY(0); /* Startgröße und Position */
       opacity: 1; /* Anfangs vollständig sichtbar */
     }
     50% {
@@ -397,7 +397,7 @@ button:hover {
 .checkmark {
     position: absolute;
     font-size: 35px;
-    color: #1e90ff; /* Blau für den Haken */
+    color: #e0091e; /* Blau für den Haken */
     animation: fly 3s ease-in-out forwards;
 }
 
@@ -410,7 +410,7 @@ button:hover {
         opacity: 1;
     }
     100% {
-        transform: translate(50vw, 50vh) scale(1.5);
+        transform: translate(0vw, 150vh) scale(2.5);
         opacity: 0;
     }
 }

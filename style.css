@@ -385,3 +385,32 @@ button:hover {
     text-transform: uppercase;
     margin: -20px 0px 0 107px;
 }
+
+
+.checkmark-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.checkmark {
+    position: absolute;
+    font-size: 35px;
+    color: #1e90ff; /* Blau für den Haken */
+    animation: fly 3s ease-in-out forwards;
+}
+
+@keyframes fly {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(50vw, 50vh) scale(1.5);
+        opacity: 0;
+    }
+}

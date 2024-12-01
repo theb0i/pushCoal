@@ -66,6 +66,15 @@ color: #fff;
 text-transform: uppercase;
 font-weight: 500;
 }
+
+h4 {
+    margin: 10px 0 10px 0;
+    font-size: large;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 500;
+    }
+
 .container {
     max-width: 400px;
     margin: auto;
@@ -273,12 +282,19 @@ button:hover {
     display: block;
     transition: background-color 0.3s ease;
     background-color: #e0091e;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5); 
 }
 
 
 /* Um neue Benachrichtigungen unter der alten hinzuzufügen */
 #notifications-list {
-    margin-top: 20px;
+    margin: 10px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
 }
 
 .completed {
@@ -293,9 +309,11 @@ button:hover {
     display: flex;
     flex-direction: column;
     border-radius: 8px;
-    padding: 10px;
+    padding: 0;
     border: 0px solid #ccc;
+    min-width: 340px;
     max-width: 400px;
+    padding: 10px;
 }
 
 .notification-header {
@@ -344,4 +362,26 @@ button:hover {
     font-size: medium;
     color: #f9f9f9;
     text-align: right;
+}
+
+
+.adara-text {
+    font-family: "Ephesis", sans-serif ;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    text-transform: none !important;
+    font-style: normal;
+    font-size: 60px;
+    color: #e0091e;
+}
+
+.lounge-text {
+    font-family: "inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 13px;
+    color: #fff;
+    text-transform: uppercase;
+    margin: -20px 0px 0 107px;
 }

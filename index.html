@@ -29,13 +29,22 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app); // Holen der Datenbank-Referenz
 
+    // Funktion, um URL-Parameter zu extrahieren
+    function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+    const tableNumber = getQueryParam('tableNumber') || '1'; // Standardwert '1', falls nicht angegeben
+
+
     // Button-Event Listener, um Benachrichtigung zu senden
     document.getElementById('notifyButton').addEventListener('click', () => {
         const notificationRef = ref(db, 'notifications');  // Referenz auf 'notifications' in der Datenbank
         set(notificationRef, {
             message: 'Neue Kohle',  // Nachricht, die gesendet werden soll
             timestamp: new Date().toLocaleTimeString(),  // nur die Uhrzeit
-            tableNumber: '1'
+            tableNumber: tableNumber
         }).then(() => {
             // Text anzeigen, wenn Benachrichtigung erfolgreich gesendet wurde
             document.getElementById('confirmationMessageCoal').innerText = 'Kohle erfolgreich bestellt!';
@@ -49,7 +58,7 @@
         set(notificationRef, {
             message: 'Service',  // Nachricht, die gesendet werden soll
             timestamp: new Date().toLocaleTimeString(),  // nur die Uhrzeit
-            tableNumber: '1'
+            tableNumber: tableNumber
         }).then(() => {
             // Text anzeigen, wenn Benachrichtigung erfolgreich gesendet wurde
             document.getElementById('confirmationMessageCoal').innerText = 'Service erfolgreich bestellt!';

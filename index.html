@@ -71,11 +71,11 @@
     });
 
 
-    
+
     function triggerFlyingCheckmarks() {
     const container = document.getElementById('checkmark-container');
 
-    for (let i = 0; i < 10; i++) {  // 10 Haken werden erzeugt
+    for (let i = 0; i < 10; i++) { 
         const checkmark = document.createElement('div');
         checkmark.className = 'checkmark';
         checkmark.textContent = '✔';
@@ -83,29 +83,38 @@
 
         // Zufällige Startpositionen aus allen Seiten
         const randomSide = Math.floor(Math.random() * 4);  // 0 = oben, 1 = rechts, 2 = unten, 3 = links
-        let startTop, startLeft;
+        let styleProps = {}; // Dynamische Styles
 
         switch (randomSide) {
-            case 0: // von oben
-                startTop = `${-Math.random() * 100 - 10}px`; // Über dem Bildschirm
-                startLeft = `${Math.random() * window.innerWidth}px`; // Zufällige horizontale Position
+            case 0: // Von oben
+                styleProps = {
+                    top: `${-Math.random() * 100 - 10}px`, // Über dem Bildschirm
+                    left: `${Math.random() * window.innerWidth}px` // Zufällige horizontale Position
+                };
                 break;
-            case 1: // von rechts
-                startTop = `${Math.random() * window.innerHeight}px`; // Zufällige vertikale Position
-                startLeft = `${window.innerWidth + Math.random() * 100}px`; // Über den Bildschirm rechts
+            case 1: // Von rechts
+                styleProps = {
+                    top: `${Math.random() * window.innerHeight}px`, // Zufällige vertikale Position
+                    right: `${-Math.random() * 100 - 10}px` // Über den Bildschirm rechts
+                };
                 break;
-            case 2: // von unten
-                startTop = `${window.innerHeight + Math.random() * 100}px`; // Unter dem Bildschirm
-                startLeft = `${Math.random() * window.innerWidth}px`; // Zufällige horizontale Position
+            case 2: // Von unten
+                styleProps = {
+                    bottom: `${-Math.random() * 100 - 10}px`, // Unter dem Bildschirm
+                    left: `${Math.random() * window.innerWidth}px` // Zufällige horizontale Position
+                };
                 break;
-            case 3: // von links
-                startTop = `${Math.random() * window.innerHeight}px`; // Zufällige vertikale Position
-                startLeft = `${-Math.random() * 100 - 10}px`; // Über den Bildschirm links
+            case 3: // Von links
+                styleProps = {
+                    top: `${Math.random() * window.innerHeight}px`, // Zufällige vertikale Position
+                    left: `${-Math.random() * 100 - 10}px` // Über den Bildschirm links
+                };
                 break;
         }
 
-        checkmark.style.top = startTop;
-        checkmark.style.left = startLeft;
+        // Style-Eigenschaften anwenden
+        Object.assign(checkmark.style, styleProps);
+        checkmark.style.position = 'absolute';
 
         container.appendChild(checkmark);
 
@@ -140,31 +149,21 @@
 
 
     <!-- Hier ist der Shisha Rauch -->
+   <div class="footer">
     <div class="smoke"></div>
     <div class="smoke"></div> 
     <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>    
     <div class="smoke"></div> 
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
     <div class="smoke"></div>
     <div class="smoke"></div> 
     <div class="smoke"></div>
+    <div class="smoke"></div> 
     <div class="smoke"></div>
+    <div class="smoke"></div> 
     <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
-    <div class="smoke"></div>
+    <div class="smoke"></div> 
+</div>
+
     <!-- Dein Footer-Inhalt -->
 
 

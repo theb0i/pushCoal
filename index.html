@@ -49,6 +49,7 @@
         }).then(() => {
             // Text anzeigen, wenn Benachrichtigung erfolgreich gesendet wurde
             document.getElementById('confirmationMessageCoal').innerText = 'Kohle erfolgreich bestellt!';
+            triggerFlyingCheckmarks(); // Trigger Checkmarks
         }).catch((error) => {
             console.error('Fehler beim Senden der Benachrichtigung:', error);
         });
@@ -63,10 +64,62 @@
         }).then(() => {
             // Text anzeigen, wenn Benachrichtigung erfolgreich gesendet wurde
             document.getElementById('confirmationMessageCoal').innerText = 'Service erfolgreich bestellt!';
+            triggerFlyingCheckmarks(); // Trigger Checkmarks
         }).catch((error) => {
             console.error('Fehler beim Senden der Benachrichtigung:', error);
         });
     });
+
+
+    
+    function triggerFlyingCheckmarks() {
+    const container = document.getElementById('checkmark-container');
+
+    for (let i = 0; i < 10; i++) {  // 10 Haken werden erzeugt
+        const checkmark = document.createElement('div');
+        checkmark.className = 'checkmark';
+        checkmark.textContent = '✔';
+        checkmark.style.position = 'absolute';
+
+        // Zufällige Startpositionen aus allen Seiten
+        const randomSide = Math.floor(Math.random() * 4);  // 0 = oben, 1 = rechts, 2 = unten, 3 = links
+        let startTop, startLeft;
+
+        switch (randomSide) {
+            case 0: // von oben
+                startTop = `${-Math.random() * 100 - 10}px`; // Über dem Bildschirm
+                startLeft = `${Math.random() * window.innerWidth}px`; // Zufällige horizontale Position
+                break;
+            case 1: // von rechts
+                startTop = `${Math.random() * window.innerHeight}px`; // Zufällige vertikale Position
+                startLeft = `${window.innerWidth + Math.random() * 100}px`; // Über den Bildschirm rechts
+                break;
+            case 2: // von unten
+                startTop = `${window.innerHeight + Math.random() * 100}px`; // Unter dem Bildschirm
+                startLeft = `${Math.random() * window.innerWidth}px`; // Zufällige horizontale Position
+                break;
+            case 3: // von links
+                startTop = `${Math.random() * window.innerHeight}px`; // Zufällige vertikale Position
+                startLeft = `${-Math.random() * 100 - 10}px`; // Über den Bildschirm links
+                break;
+        }
+
+        checkmark.style.top = startTop;
+        checkmark.style.left = startLeft;
+
+        container.appendChild(checkmark);
+
+        // Animation zur Mitte (50vw, 50vh)
+        checkmark.style.animation = 'fly 3s ease-in-out forwards';
+
+        // Entfernen des Haken nach Abschluss der Animation
+        checkmark.addEventListener('animationend', () => {
+            checkmark.remove();
+        });
+    }
+}
+
+
 
 </script>
 <div class="header">
@@ -75,8 +128,13 @@
 <h4>Was brauchst du?</h4>
 <button id="notifyButton">Kohle</button>
 <button id="notifyButton2">Service</button>
+<div id="checkmark-container"></div>
+
 <!-- Bestätigungstext wird hier angezeigt -->
 <p id="confirmationMessageCoal"></p>
+
+
+
 
 
 
